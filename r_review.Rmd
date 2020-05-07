@@ -1,0 +1,139 @@
+---
+title: "統繪R_review"
+author: "kevin"
+date: "2020/5/2"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R複習
+**基本運算**
+
+* 加  +
+
+* 減  -
+
+* 乘  *
+
+* 除  /
+
+* 餘數  %%
+
+* 次方  ^
+
+*範例*
+```{r}
+1+2 #加
+1-2 #減
+2*3 #乘
+3/2 #除
+3%%2 #餘數
+3^2 #次方
+```
+**向量**
+
+* *c()* 將數字或字串集合成向量
+
+* *seq()* 連續數字 如果要有間隔(隔2,3,...) 函數內令 by=
+
+* *rep()* 重複數字或向量
+
+*範例*
+```{r}
+x<-c(1,2,3)
+x
+seq(1,30,by=3)
+rep(c(2,5),c(1,3)) #2重複1次,5重複3次
+```
+
+**函數**
+
+* *mean()*平均
+
+* *var()* 變異數
+
+*範例*
+```{r}
+y<-1:10
+
+mean(y)
+var(y)
+```
+
+**matrix**
+```{r}
+matrix(1:6, nrow = 2, ncol = 3) #2列3行的矩陣
+matrix(1:6, nrow = 2, ncol = 3, byrow = TRUE)#1到6,由列開始排
+matrix(1:6, nrow = 2, ncol = 3,
+  dimnames = list(c("row1", "row2"),
+  c("C.1", "C.2", "C.3"))) #幫行跟列建立名子
+```
+
+**畫圖**
+```{r}
+par(mfrow = c(2, 2))  #建立一個2乘2的空間畫圖
+
+#畫binomial的圖
+
+p<-c(0.7,0.5,0.2)
+figure_color<-c("black","blue","red")
+figure_pch<-c(16,8,17)
+x<-c(0:10)
+pmf<-dbinom(x,10,p[1])
+plot(x,pmf,type="h",col=figure_color[1],xlim=c(0,10),ylim=c(0,0.4))
+points(x,pmf,col=figure_color[1],pch=figure_pch[1])
+
+pmf2<-dbinom(x,10,p[2])
+points(x,pmf2,col=figure_color[2],pch=figure_pch[2])
+lines(x,pmf2,type="h",col=figure_color[2],lty=4)
+
+pmf3<-dbinom(x,10,p[3])
+points(x,pmf3,col=figure_color[3],pch=figure_pch[3])
+lines(x,pmf3,type="h",col=figure_color[3],lty=2)
+
+title(expression(paste("Bionomial(",n,",",p,")with","n=10")))
+legend("topright",c("p=0.7","p=0.5","p=0.2"),
+col=figure_color,lty=c(1,4,2),pch=figure_pch,cex=1)
+
+#畫gamma的圖
+
+curve(dgamma(x,1,3),xlim = c(0,5),ylim=c(0,3),xlab="x",ylab="pdf")
+par(new=TRUE)
+curve(dgamma(x,2,3),xlim = c(0,5),ylim=c(0,3),xlab="x",ylab="pdf",col="red",lty=2)
+par(new=TRUE)
+curve(dgamma(x,3,3),xlim = c(0,5),ylim=c(0,3),xlab="x",ylab="pdf",col="blue",lty=4)
+par(new=TRUE)
+curve(dgamma(x,5,3),xlim = c(0,5),ylim=c(0,3),xlab="x",ylab="pdf",col="gray",lty=11)
+title(expression(paste("Gamma(", alpha , ", ", lambda, ") with ", lambda, " = 3"))) 
+t.legend=c(expression(paste(alpha," = 1")),expression(paste(alpha," = 2")),expression(paste(alpha," = 3")),expression(paste(alpha," = 5")))
+legend("topright",col=c("black","red","blue","gray"),lty=c(1,2,4,11),legend = t.legend)
+
+#畫normal的圖(變異數不變，比較不同的平均數)
+
+curve(dnorm(x,5,1),xlim = c(0,20),ylim=c(0,0.4),xlab="x",ylab="pdf")
+par(new=TRUE)
+curve(dnorm(x,10,1),xlim = c(0,20),ylim=c(0,0.4),xlab="x",ylab="pdf",col="red",lty=2)
+par(new=TRUE)
+curve(dnorm(x,12,1),xlim = c(0,20),ylim=c(0,0.4),xlab="x",ylab="pdf",col="blue",lty=4)
+par(new=TRUE)
+curve(dnorm(x,14,1),xlim = c(0,20),ylim=c(0,0.4),xlab="x",ylab="pdf",col="gray",lty=11)
+title(expression(paste("N(", mu , ", ", sigma^2, ") with ", sigma^2, " = 1"))) 
+t.legend=c(expression(paste(mu," = 5")),expression(paste(mu," = 10")),expression(paste(mu," = 12")),expression(paste(mu," = 14")))
+legend("topright",col=c("black","red","blue","gray"),lty=c(1,2,4,11),legend = t.legend)
+
+#畫normal的圖(平均數不變，比較不同的變異數)
+
+curve(dnorm(x,0,0.5),xlim = c(-5,5),ylim=c(0,0.8),xlab="x",ylab="pdf")
+par(new=TRUE)
+curve(dnorm(x,0,1),xlim = c(-5,5),ylim=c(0,0.8),xlab="x",ylab="pdf",col="red",lty=2)
+par(new=TRUE)
+curve(dnorm(x,0,2),xlim = c(-5,5),ylim=c(0,0.8),xlab="x",ylab="pdf",col="blue",lty=4)
+par(new=TRUE)
+curve(dnorm(x,0,3),xlim = c(-5,5),ylim=c(0,0.8),xlab="x",ylab="pdf",col="gray",lty=11)
+title(expression(paste("N(", mu , ", ", sigma^2, ") with ", mu, " = 0"))) 
+t.legend=c(expression(paste(sigma," = 0.5")),expression(paste(sigma," = 1")),expression(paste(sigma," = 2")),expression(paste(sigma," = 3")))
+legend("topright",col=c("black","red","blue","gray"),lty=c(1,2,4,11),legend = t.legend)
+```
